@@ -22,10 +22,6 @@ public class AddCoursesTeacher extends javax.swing.JFrame {
         
         initComponents();
         accesTeacherInfo();
-        
-        //setCourseName();
-        //txtCourseNum.setSelectedItem(null);
-       // setCourseName();
     }
     public void addCourse()
     {
@@ -56,34 +52,44 @@ public class AddCoursesTeacher extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: " + e);
         }
     }
-    private ArrayList<String> courseAL= new ArrayList<String>();
+  private ArrayList<String> courseAL= new ArrayList<String>();
     public void checkRepeatedCourse()
     {
+        boolean registeredCourse=false;
         try
         {
             setCourseName();
             Connection con = ConnectionProvider.getCon();
             Statement st= con.createStatement();
             String courseName=txtCourseName.getText();
+            String courseRegistered;
            
             String teacherID=txtTeacherID.getText();
             
             ResultSet rs = st.executeQuery("select courses.courseName from courses where teacherID='"+teacherID+"'");
             while(rs.next())
             {
-                courseName=rs.getString(1);
-                courseAL.add(courseName);
+                courseRegistered=rs.getString(1);
+                courseAL.add(courseRegistered);
             }
+            //System.out.println(courseAL.size());
+            //JOptionPane.showMessageDialog(null,courseAL.size());
             for(int i=0; i <courseAL.size();i++)
             {
-                if(courseAL.get(i).equalsIgnoreCase(courseName))
+                if(courseAL.get(i).equals(courseName))
                 {
-                    JOptionPane.showMessageDialog(null,"You are already registered to "+courseName+" .No Duplicate Course");
-                }
-                else
-                {
-                    addCourse();
-                }
+                    registeredCourse=true;
+                    break; 
+                    //
+                }  
+            }
+            if(registeredCourse==false)
+            {
+                addCourse();
+            }
+            else if(registeredCourse==true)
+            {
+                JOptionPane.showMessageDialog(null,"You are already registered to "+courseName+" .No Duplicate Course");
             }
         }
         catch (Exception e)
@@ -216,7 +222,8 @@ public class AddCoursesTeacher extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        checkRepeatedCourse();
+       checkRepeatedCourse();
+       // addCourse();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropActionPerformed
@@ -292,10 +299,6 @@ public class AddCoursesTeacher extends javax.swing.JFrame {
         else if(txtCourseNum.getSelectedItem().toString().equals("CSC 121"))
         {
             txtCourseName.setText("Java 1");
-        }
-        else if (txtCourseNum.getSelectedItem().toString().equals("None"))
-        {
-             txtCourseName.setText("");
         }
         else if (txtCourseNum.getSelectedItem().toString().equals("CSC 123"))
         {

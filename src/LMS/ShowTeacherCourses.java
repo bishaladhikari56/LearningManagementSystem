@@ -63,7 +63,7 @@ public class ShowTeacherCourses extends javax.swing.JFrame {
         {
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select * from courses where teacherID='"+teacherID+"'");
+            ResultSet rs = st.executeQuery("select * from courses where teacherID='"+teacherID+"' and studentID is NULL");
             while(rs.next())
             {
                 dtm.addRow(new Object[]{rs.getString(2),rs.getString(3),rs.getString(4)});

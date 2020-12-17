@@ -88,12 +88,22 @@ public class CanvasHomePage extends javax.swing.JFrame {
 
         btnMessage.setBackground(new java.awt.Color(153, 153, 255));
         btnMessage.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnMessage.setText("Organizations");
+        btnMessage.setText("Calander");
+        btnMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMessageActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 210, 70));
 
         jButton5.setBackground(new java.awt.Color(153, 153, 255));
         jButton5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButton5.setText("Tools");
+        jButton5.setText("Message");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 210, 60));
 
         btnSignOut.setBackground(new java.awt.Color(153, 153, 255));
@@ -176,6 +186,16 @@ public class CanvasHomePage extends javax.swing.JFrame {
         
         new FinalGrades().setVisible(true);
     }//GEN-LAST:event_btnGradesActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        new EmailSendingApplication().setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void btnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMessageActionPerformed
+        // TODO add your handling code here:
+        new CalanderPage().setVisible(true);
+    }//GEN-LAST:event_btnMessageActionPerformed
 
     /**
      * @param args the command line arguments

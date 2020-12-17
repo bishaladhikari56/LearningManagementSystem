@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 package LMS;
+import static LMS.AddGradesPage.teacherCourseIDAL;
 import java.sql.*;
 import Project1.ConnectionProvider;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -17,14 +19,179 @@ public class AddCourses extends javax.swing.JFrame {
     /**
      * Creates new form Courses
      */
+    public static String studentID;
+    private ArrayList<String> studentCourseIDAL= new ArrayList<String>();
+    private ArrayList<String> teacherIDAL= new ArrayList<String>();
+    private ArrayList<String> registeredTeacherAL= new ArrayList<String>();
+    private boolean registeredTeacherID=false;
+    private boolean registeredTeacher=false;
     public AddCourses() {
         
         initComponents();
         accesStudentInfo();
+        setCourseName();
         
         //setCourseName();
         //txtCourseNum.setSelectedItem(null);
        // setCourseName();
+    }
+    public void checkTeacherID()
+    {
+        
+        try
+        {
+            Connection con = ConnectionProvider.getCon();
+            Statement st= con.createStatement();
+            String teacherID1;
+           
+            String teacherID=txtTeacherID.getText();
+            
+            ResultSet rs = st.executeQuery("select courses.teacherID from courses" );
+            while(rs.next())
+            {
+                teacherID1=rs.getString(1);
+                teacherCourseIDAL.add(teacherID1);
+            }
+            for(int i=0; i <teacherCourseIDAL.size();i++)
+            {
+                if(teacherCourseIDAL.get(i).equalsIgnoreCase(teacherID))
+                {
+                   registeredTeacherID=true;
+                   break;      
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: " + e);
+        }
+    }
+    public void checkRegisteredTeacher()
+    {
+        
+        try
+        {
+            Connection con = ConnectionProvider.getCon();
+            Statement st= con.createStatement();
+            String teacherID1;
+           
+            String teacherID=txtTeacherID.getText();
+            String courseID=txtCourseNum.getSelectedItem().toString();
+            
+            ResultSet rs = st.executeQuery("select courses.teacherID from courses where teacherID=\""+teacherID+"\" and courseID=\""+courseID+"\"" );
+            //String qrry = "select * from student1 where username=\"" + textUser + "\"and password1=\"" + txtPassword + "\"";
+            while(rs.next())
+            {
+                teacherID1=rs.getString(1);
+                registeredTeacherAL.add(teacherID1);
+            }
+            for(int i=0; i <registeredTeacherAL.size();i++)
+            {
+                if(registeredTeacherAL.get(i).equalsIgnoreCase(teacherID))
+                {
+                   registeredTeacher=true;
+                   break;      
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: " + e);
+        }
+    }
+     public void checkStudentCourse()
+    {
+        String courseID1=txtCourseNum.getSelectedItem().toString();
+        boolean registeredCourse=false;
+        if(txtTeacherID.getText().length()!=0 && txtCourseNum.getSelectedItem().toString()!="None")
+        {
+            try
+            {
+                Connection con = ConnectionProvider.getCon();
+                Statement st= con.createStatement();
+                String courseID2;
+
+                studentID=txtStudentID.getText();
+
+                ResultSet rs = st.executeQuery("select courses.courseID from courses where studentID='"+studentID+"'");
+                while(rs.next())
+                {
+                    courseID2=rs.getString(1);
+                    studentCourseIDAL.add(courseID2);
+                }
+                for(int i=0; i <studentCourseIDAL.size();i++)
+                {
+                    //JOptionPane.showMessageDialog(null, studentCourseIDAL.get(i));
+                    if(studentCourseIDAL.get(i).equals(courseID1))
+                    {
+                       registeredCourse=true;
+                       break;    
+                    }
+
+                }
+                if(registeredCourse==false)
+                {
+                    checkTeacherID();
+                    if(registeredTeacherID==true)
+                    {
+                        checkRegisteredTeacher();
+                        if(registeredTeacher==true)
+                        {
+                            try
+                            {
+                                Connection con1 = ConnectionProvider.getCon();
+                                String name=txtName.getText();
+                                studentID =txtStudentID.getText();
+                                String courseName=txtCourseName.getText();
+                                String courseID=txtCourseNum.getSelectedItem().toString();
+
+                                String instID=txtTeacherID.getText();
+                                //String classroom=txtInstName.getText();
+
+                                PreparedStatement ps = con.prepareStatement("insert into courses (courseID,courseName,teacherID,studentID)values(?,?,?,?)");
+                                //ps.setString(1,name);
+                                 ps.setString(4,studentID);
+                                ps.setString(1,courseID);
+                                ps.setString(2,courseName);
+                                ps.setString(3,instID);
+                                //ps.setString(5,classroom);
+                                ps.executeUpdate();
+                                JOptionPane.showMessageDialog(null,"Sucessfully updated");
+                                setVisible(false);
+                                new ShowCourses().setVisible(true);
+                            }
+                            catch (Exception e)
+                            {
+                                JOptionPane.showMessageDialog(null, "Error: " + e);
+                            }
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(null,txtTeacherID.getText()+"is not registered for this course.");
+                        }    
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(null,txtTeacherID.getText()+"is not a registered teacher of this university.");
+                    }
+                     
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,"You are already registered to the course "+courseID1);
+                }
+
+            }
+            catch (Exception e)
+            {
+                JOptionPane.showMessageDialog(null, "Error: " + e);
+            }
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null,"Please fill all the details");
+        }
+        
     }
 
     /**
@@ -160,53 +327,40 @@ public class AddCourses extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        try
-        {
-            setCourseName();
-            Connection con = ConnectionProvider.getCon();
-            String name=txtName.getText();
-            String StudentID =txtStudentID.getText();
-            String courseName=txtCourseName.getText();
-            String courseID=txtCourseNum.getSelectedItem().toString();
-            
-            String instID=txtTeacherID.getText();
-            //String classroom=txtInstName.getText();
-            
-            PreparedStatement ps = con.prepareStatement("insert into courses values(?,?,?,?)");
-            //ps.setString(1,name);
-             ps.setString(1,StudentID);
-            ps.setString(2,courseID);
-            ps.setString(3,courseName);
-            ps.setString(4,instID);
-            //ps.setString(5,classroom);
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Sucessfully updated");
-            setVisible(false);
-            new ShowCourses().setVisible(true);
-        }
-        catch (Exception e)
-        {
-            JOptionPane.showMessageDialog(null, "Error: " + e);
-        }
+
+       
+        checkStudentCourse();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropActionPerformed
+        
+        setCourseName();
         String courseName= txtCourseName.getText();
         String teacherID= txtTeacherID.getText();
-        try
+        if(courseName.length()!=0 && teacherID.length()!=0)
         {
-            Connection con =ConnectionProvider.getCon();
-            Statement st=con.createStatement();
-            st.executeUpdate("delete from courses where courseName='"+courseName+"' and teacherID='"+teacherID+"'");
-            JOptionPane.showMessageDialog(null,"Sucessfully deleted");
-            clear();
-            //setVisible(false);
-           // new ShowCourses().setVisible(true);
+            try
+            {
+                Connection con =ConnectionProvider.getCon();
+                Statement st=con.createStatement();
+                int a = JOptionPane.showConfirmDialog(null, "Do you really want to Log Out", "Select", JOptionPane.YES_NO_OPTION);
+                if (a == 0)
+                {
+                    st.executeUpdate("delete from courses where courseName='"+courseName+"' and teacherID='"+teacherID+"'");
+                    JOptionPane.showMessageDialog(null,"Sucessfully deleted");
+                    clear();     
+                }
+            }
+            catch (Exception e)
+            {
+                JOptionPane.showMessageDialog(null,e);
+            }
         }
-        catch (Exception e)
+        else
         {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null,"Please fill all the detals to drop the course");
         }
+        
     }//GEN-LAST:event_btnDropActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -224,10 +378,10 @@ public class AddCourses extends javax.swing.JFrame {
      */
     public  void clear()
     {
-       // txtName.setText(null);
-        //txtCourseName.setText(null);
-        txtCourseNum.setSelectedItem(null);
-        txtTeacherID.setText(null);
+        //txtName.setText("");
+        txtCourseName.setText("");
+        txtCourseNum.setSelectedItem("");
+        txtTeacherID.setText("");
         
     }
     public void accesStudentInfo()
@@ -269,7 +423,7 @@ public class AddCourses extends javax.swing.JFrame {
         }
         else if (txtCourseNum.getSelectedItem().toString().equals("CSC 300"))
         {
-             txtCourseName.setText("Software Engineering");
+             txtCourseName.setText("Software Development");
         }
         else if (txtCourseNum.getSelectedItem().toString().equals("CSC 281"))
         {
@@ -369,7 +523,7 @@ public class AddCourses extends javax.swing.JFrame {
     private javax.swing.JTextField txtCourseName;
     private javax.swing.JComboBox<String> txtCourseNum;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtStudentID;
+    public static javax.swing.JTextField txtStudentID;
     private javax.swing.JTextField txtTeacherID;
     // End of variables declaration//GEN-END:variables
 }

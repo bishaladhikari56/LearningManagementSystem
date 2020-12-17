@@ -23,10 +23,15 @@ public class AddGradesPage extends javax.swing.JFrame {
     /**
      * Creates new form AddGradesPage
      */
-    private ArrayList<String> courseIDAL= new ArrayList<String>();
+    public static ArrayList<String> teacherCourseIDAL= new ArrayList<String>();
+    private ArrayList<String> studentCourseIDAL= new ArrayList<String>();
+   // private ArrayList<String> teacherIDAL= new ArrayList<String>();
+    private ArrayList<String> studentIDAL= new ArrayList<String>();
     public AddGradesPage() {
         initComponents();
         getUniqueIDTeacher();
+        ShowGrades();
+        //getUniqueIDTeacher();
     }
     public void clear()
     {
@@ -40,18 +45,143 @@ public class AddGradesPage extends javax.swing.JFrame {
         setVisible(false);
         new AddGradesPage().setVisible(true);
     }
+    public void addGrades()
+    {
+        boolean registeredCourse=false;
+        boolean registeredCourseSTD=false;
+        String courseID1=txtCourseID.getSelectedItem().toString();
+        //Paste code from add portion here later
+         try
+            {
+                if(!txtCourseID.getSelectedItem().toString().equals("None"))
+                {
+                    if(txtStudentID.getText().length()!=0 && txtGrade.getText().length()!=0)
+                    {
+                        try
+                        {
+                            Connection con = ConnectionProvider.getCon();
+                            Statement st= con.createStatement();
+                            String courseID;
+
+                            String teacherID=txtTeacherID.getText();
+
+                            ResultSet rs = st.executeQuery("select courses.courseID from courses where teacherID='"+teacherID+"'");
+                            while(rs.next())
+                            {
+                                courseID=rs.getString(1);
+                                teacherCourseIDAL.add(courseID);
+                            }
+                            
+                            for(int i=0; i <teacherCourseIDAL.size();i++)
+                            {
+                                //JOptionPane.showMessageDialog(null,teacherCourseIDAL.get(i));
+                                if(teacherCourseIDAL.get(i).equals(courseID1))
+                                {
+                                   registeredCourse=true;
+                                   break;
+                                  
+                                }
+                            }
+                            //JOptionPane.showMessageDialog(null,registeredCourse);
+                            if(registeredCourse==true)
+                            {
+                                 try
+                                {
+                                    Connection con2 = ConnectionProvider.getCon();
+                                    Statement st1= con.createStatement();
+                                    //String courseID;
+
+                                    String studentID=txtStudentID.getText();
+
+                                    ResultSet rs2 = st.executeQuery("select courses.courseID from courses where studentID='"+studentID+"'");
+                                    while(rs2.next())
+                                    {
+                                        courseID=rs2.getString(1);
+                                        studentCourseIDAL.add(courseID);
+                                    }
+                                    for(int i=0; i <studentCourseIDAL.size();i++)
+                                    {
+                                        //JOptionPane.showMessageDialog(null,teacherCourseIDAL.get(i));
+                                        if(studentCourseIDAL.get(i).equals(courseID1))
+                                        {
+                                           registeredCourseSTD=true;
+                                           break;
+
+                                        }
+                                    }
+                                    if(registeredCourseSTD==true)
+                                    {
+                                        Connection con1=ConnectionProvider.getCon();
+                                        String studentId=txtStudentID.getText();
+                                        String CourseId=txtCourseID.getSelectedItem().toString();
+                                        String Grades=txtGrade.getText();
+                                        String Comments=txtTeacherID.getText();
+                                        PreparedStatement ps =con1.prepareStatement("insert into grades (studentID,courseID,grades,teacherID) values(?,?,?,?)");
+                                        ps.setString(1,studentId);
+                                        ps.setString(2,CourseId);
+                                        ps.setString(3,Grades);
+                                        ps.setString(4,Comments);
+                                        ps.executeUpdate();
+                                        JOptionPane.showMessageDialog(null,"Sucessfully updated");
+
+                                        ShowGrades();
+                                        clear();
+                                    }
+                                    else
+                                    {
+                                        JOptionPane.showMessageDialog(null,"This student with "+txtStudentID.getText()+" is not registered to the course "+courseID1);
+
+                                    }
+
+                                    }
+                                catch (Exception e)
+                                {
+                                    JOptionPane.showMessageDialog(null, "Error: " + e);
+                                }
+                                
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(null,"You are not registered to the course "+courseID1);
+                            }
+                            
+                        }
+                        catch (Exception e)
+                        {
+                            JOptionPane.showMessageDialog(null, "Error: " + e);
+                        }
+                        
+                    }
+                    else
+                    {
+                         JOptionPane.showMessageDialog(null,"Please fill in all Fields");
+
+                    }    
+                }
+                else
+                {
+                     JOptionPane.showMessageDialog(null,"Please select a course to add");
+                }
+
+            }
+       catch (Exception e)
+            {
+                JOptionPane.showMessageDialog(null,e);
+            }
+    }
     public void ShowGrades()
     {
         DefaultTableModel dtm =(DefaultTableModel) jTable1.getModel();
         dtm.setRowCount(0);
         try
         {
+            getUniqueIDTeacher();
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select * from grades");
+            ResultSet rs = st.executeQuery("select * from grades where teacherID=\"" + txtTeacherID.getText() + "\"");
             while(rs.next())
             {
-                dtm.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)});
+                dtm.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(5),rs.getString(3)});
             }
         }
         catch (Exception e)
@@ -81,31 +211,69 @@ public class AddGradesPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-     public void checkRepeatedCourse()
+     public void checkTeacherCourse(String courseID1)
     {
         try
         {
             Connection con = ConnectionProvider.getCon();
             Statement st= con.createStatement();
-            String courseName=txtCourseName.getText();
+            String courseID;
            
             String teacherID=txtTeacherID.getText();
             
-            ResultSet rs = st.executeQuery("select courses.courseName from courses where teacherID='"+teacherID+"'");
+            ResultSet rs = st.executeQuery("select courses.courseID from courses where teacherID='"+teacherID+"'");
             while(rs.next())
             {
-                courseName=rs.getString(1);
-                courseAL.add(courseName);
+                courseID=rs.getString(1);
+                teacherCourseIDAL.add(courseID);
             }
-            for(int i=0; i <courseAL.size();i++)
+            for(int i=0; i <teacherCourseIDAL.size();i++)
             {
-                if(courseAL.get(i).equalsIgnoreCase(courseName))
+                if(teacherCourseIDAL.get(i).equalsIgnoreCase(courseID1))
                 {
-                    JOptionPane.showMessageDialog(null,"You are already registered to "+courseName+" .No Duplicate Course");
+                   //Call Add method here
+                    
+                   checkStudentCourse(txtCourseID.getSelectedItem().toString());
+                    
                 }
                 else
                 {
-                   
+                    JOptionPane.showMessageDialog(null,"You are not registered to the course "+courseID1);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, "Error: " + e);
+        }
+    }
+     public void checkStudentCourse(String courseID1)
+    {
+        try
+        {
+            Connection con = ConnectionProvider.getCon();
+            Statement st= con.createStatement();
+            String courseID;
+           
+            String studentID=txtStudentID.getText();
+            
+            ResultSet rs = st.executeQuery("select courses.courseID from courses where studentID='"+studentID+"'");
+            while(rs.next())
+            {
+                courseID=rs.getString(1);
+                studentCourseIDAL.add(courseID);
+            }
+            for(int i=0; i <studentCourseIDAL.size();i++)
+            {
+                if(studentCourseIDAL.get(i).equalsIgnoreCase(courseID1))
+                {
+                   //Call Add method here
+                    addGrades();
+                    
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null,"You are not registered to the course "+courseID1);
                 }
             }
         }
@@ -231,36 +399,9 @@ public class AddGradesPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-         try
-       {
-           if(txtCourseID.getSelectedItem().toString().equals("None"))
-           {
-               JOptionPane.showMessageDialog(null,"Please select a course to add");
-           }
-           else
-           {
-                Connection con=ConnectionProvider.getCon();
-                String studentId=txtStudentID.getText();
-                String CourseId=txtCourseID.getSelectedItem().toString();
-                String Grades=txtGrade.getText();
-                String Comments=txtTeacherID.getText();
-                PreparedStatement ps =con.prepareStatement("insert into grades (studentID,courseID,grades,teacherID) values(?,?,?,?)");
-                ps.setString(1,studentId);
-                ps.setString(2,CourseId);
-                ps.setString(3,Grades);
-                ps.setString(4,Comments);
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null,"Sucessfully updated");
-                
-                ShowGrades();
-                clear();
-           }
-           
-       }
-       catch (Exception e)
-       {
-           JOptionPane.showMessageDialog(null,e);
-       }
+        
+        //checkTeacherCourse(cID);
+        addGrades();
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
@@ -284,11 +425,14 @@ public class AddGradesPage extends javax.swing.JFrame {
                 Connection con = ConnectionProvider.getCon();
                 PreparedStatement ps = con.prepareStatement(sql);
                 ps.setString(1,studentID);
-                 ps.setString(2,courseID);
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null,"Deleted Sucessfully");
-                ShowGrades();
-                
+                ps.setString(2,courseID);
+                int a = JOptionPane.showConfirmDialog(null,"Do you really want to Delete Grade","Select",JOptionPane.YES_NO_OPTION);
+                if(a ==0)
+                {
+                    ps.executeUpdate();
+                    JOptionPane.showMessageDialog(null,"Deleted Sucessfully");
+                    ShowGrades();
+                }    
             }
             else
             {

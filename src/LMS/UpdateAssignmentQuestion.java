@@ -27,8 +27,8 @@ public class UpdateAssignmentQuestion extends javax.swing.JFrame {
          try
         {
             Connection con = ConnectionProvider.getCon();
-            String courseID=ContentPageTeacherCourse.lblCourseID.getText();
-            String teacherID=ContentPageTeacherCourse.lblTeacherID.getText();
+            String courseID=IndividualCoursePageTeacher.lblCourseID.getText();
+            String teacherID=IndividualCoursePageTeacher.lblInstructorID.getText();
 
             String question=txtQuestion.getText();
             String option1=txtOption1.getText();

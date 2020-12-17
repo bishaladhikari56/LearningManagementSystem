@@ -6,6 +6,7 @@
  */
 package LMS;
 
+import java.util.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.*;
@@ -18,15 +19,14 @@ import javax.swing.JTextField;
  */
 public class Registration extends javax.swing.JFrame {
 
-    
     /**
      * Creates new form Registration
      */
     // private javax.swing.JTextField txtName;
     int lastUniqueID;
     int lastUniqueIDTeach;
-    public void setTxtName(JTextField txtName) 
-    {
+
+    public void setTxtName(JTextField txtName) {
         this.txtName = txtName;
     }
 
@@ -36,80 +36,62 @@ public class Registration extends javax.swing.JFrame {
 
     public Registration() {
 
-       initComponents();
-      // getLastUniqueIDStudent();
-      // getLastUniqueIDTeacher();
-       
+        initComponents();
+        // getLastUniqueIDStudent();
+        // getLastUniqueIDTeacher();
 
     }
-   
-    public void getLastUniqueIDStudent()
-    {
-        if(comboType.getSelectedItem().equals("Student"))
-        {
-            try
-            {
+
+    public void getLastUniqueIDStudent() {
+        if (comboType.getSelectedItem().equals("Student")) {
+            try {
                 Class.forName("java.sql.Driver");
                 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/learningmanagementsystem", "root", "toor");
                 Statement stmnt = conn.createStatement();
-                String sql= "Select max(studentID) from student1";
-                ResultSet rs= stmnt.executeQuery(sql);
+                String sql = "Select max(studentID) from student1";
+                ResultSet rs = stmnt.executeQuery(sql);
                 rs.next();
-                
-                lastUniqueID=Integer.parseInt(rs.getString("Max(studentID)"));
+
+                lastUniqueID = Integer.parseInt(rs.getString("Max(studentID)"));
                 //lastUniqueID=rs.getInt(1);
-                if(rs.getString("Max(studentID)") == null)
-                {
+                if (rs.getString("Max(studentID)") == null) {
                     txtUniqueID.setText("1000");
-                }
-                else
-                {
+                } else {
                     lastUniqueID++;
                     txtUniqueID.setText(Integer.toString(lastUniqueID));
                 }
-                
-            }
-            catch(Exception ex)
-            {
-                JOptionPane.showMessageDialog(null,ex);
-            }
-        }
-    }
-    
-     public void getLastUniqueIDTeacher()
-    {
-        
-        if(comboType.getSelectedItem().equals("Teacher"))
-        {
-            try
-            {
-                Class.forName("java.sql.Driver");
-                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/learningmanagementsystem", "root", "toor");
-                Statement stmnt = conn.createStatement();
-                String sql= "Select max(teacherID) from teacher";
-                ResultSet rs= stmnt.executeQuery(sql);
-                rs.next();
-                
-                lastUniqueIDTeach =Integer.parseInt(rs.getString("Max(teacherID)"));
-                //lastUniqueID=rs.getInt(1);
-                if(rs.getString("Max(teacherID)") == null)
-                {
-                    txtUniqueID.setText("100");
-                }
-                else
-                {
-                    lastUniqueIDTeach++;
-                    txtUniqueID.setText(Integer.toString(lastUniqueIDTeach));
-                }
-                
-            }
-            catch(Exception ex)
-            {
-                JOptionPane.showMessageDialog(null,ex);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
             }
         }
     }
 
+    public void getLastUniqueIDTeacher() {
+
+        if (comboType.getSelectedItem().equals("Teacher")) {
+            try {
+                Class.forName("java.sql.Driver");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/learningmanagementsystem", "root", "toor");
+                Statement stmnt = conn.createStatement();
+                String sql = "Select max(teacherID) from teacher";
+                ResultSet rs = stmnt.executeQuery(sql);
+                rs.next();
+
+                lastUniqueIDTeach = Integer.parseInt(rs.getString("Max(teacherID)"));
+                //lastUniqueID=rs.getInt(1);
+                if (rs.getString("Max(teacherID)") == null) {
+                    txtUniqueID.setText("100");
+                } else {
+                    lastUniqueIDTeach++;
+                    txtUniqueID.setText(Integer.toString(lastUniqueIDTeach));
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex);
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -301,104 +283,70 @@ public class Registration extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
 
-    
+
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         // TODO add your handling code here:
         if (lblMain.getText().equals("Register")) {
-            if (comboType.getSelectedItem().toString().equals("Student")) 
-            {
+            if (comboType.getSelectedItem().toString().equals("Student")) {
                 if (txtUser.getText().length() > 0 && txtPassword.getText().length() > 0 && txtName.getText().length() > 0
-                        && txtEmail.getText().length() > 0 && txtPhone.getText().length() > 0 && txtUniqueID.getText().length() > 0) 
-                {
+                        && txtEmail.getText().length() > 0 && txtPhone.getText().length() > 0 && txtUniqueID.getText().length() > 0) {
                     int studentId = Integer.parseInt(txtUniqueID.getText());
-                    if (studentId >= 1000 && studentId <= 2000) 
-                    {
+                    if (studentId >= 1000 && studentId <= 2000) {
                         String email = txtEmail.getText();
-                        if (email.contains("@toromail.csudh.edu"))
-                        {
-                            if (txtPassword.getText().length() >= 6) 
-                            {
-                                if (txtPhone.getText().length() == 10) 
-                                {
+                        if (email.contains("@toromail.csudh.edu")) {
+                            if (txtPassword.getText().length() >= 6) {
+                                if (txtPhone.getText().length() == 10) {
                                     RegisterCall(txtUser.getText(), txtPassword.getText(), txtName.getText(), txtEmail.getText(), txtPhone.getText(), txtUniqueID.getText());
                                     getLastUniqueIDStudent();
                                     LoginCall(txtUser.getText(), txtPassword.getText());
 
-                                }
-                                else
-                                {
+                                } else {
                                     JOptionPane.showMessageDialog(null, "Please Enter a 10 digit Valid phone number");
                                 }
-                            } 
-                            else
-                            {
+                            } else {
                                 JOptionPane.showMessageDialog(null, "Please Enter strong password of length greater than 6");
                             }
 
-                        }
-                        else
-                        {
+                        } else {
                             JOptionPane.showMessageDialog(null, "Please put the valid Email that you got from university");
                         }
 
-                    } 
-                    else
-                    {
+                    } else {
                         JOptionPane.showMessageDialog(null, "Please put the valid ID that you got from university");
                     }
 
-                } 
-                else 
-                {
+                } else {
 
                     JOptionPane.showMessageDialog(null, "Please fill in All the details");
                 }
-            }
-            else if (comboType.getSelectedItem().toString().equals("Teacher"))
-            {
+            } else if (comboType.getSelectedItem().toString().equals("Teacher")) {
                 if (txtUser.getText().length() > 0 && txtPassword.getText().length() > 0 && txtName.getText().length() > 0
-                        && txtEmail.getText().length() > 0 && txtPhone.getText().length() > 0 && txtUniqueID.getText().length() > 0) 
-                {
+                        && txtEmail.getText().length() > 0 && txtPhone.getText().length() > 0 && txtUniqueID.getText().length() > 0) {
                     int teacherId = Integer.parseInt(txtUniqueID.getText());
-                    if (teacherId >= 100 && teacherId <= 200) 
-                    {
+                    if (teacherId >= 100 && teacherId <= 200) {
                         String email = txtEmail.getText();
-                        if (email.contains("csudh.edu"))
-                        {
-                            if (txtPassword.getText().length() >= 6) 
-                            {
-                                if (txtPhone.getText().length() == 10) 
-                                {
+                        if (email.contains("csudh.edu")) {
+                            if (txtPassword.getText().length() >= 6) {
+                                if (txtPhone.getText().length() == 10) {
                                     RegisterCallTeacher(txtUser.getText(), txtPassword.getText(), txtName.getText(), txtEmail.getText(), txtPhone.getText(), txtUniqueID.getText());
                                     getLastUniqueIDTeacher();
                                     LoginCallTeacher(txtUser.getText(), txtPassword.getText());
-
-                                }
-                                else
-                                {
+                                } else {
                                     JOptionPane.showMessageDialog(null, "Please Enter a 10 digit Valid phone number");
                                 }
-                            } 
-                            else
-                            {
+                            } else {
                                 JOptionPane.showMessageDialog(null, "Please Enter strong password of length greater than 6");
                             }
 
-                        }
-                        else
-                        {
+                        } else {
                             JOptionPane.showMessageDialog(null, "Please put the valid Email that you got from university");
                         }
 
-                    } 
-                    else
-                    {
+                    } else {
                         JOptionPane.showMessageDialog(null, "Please put the valid ID that you got from university");
                     }
 
-                } 
-                else 
-                {
+                } else {
 
                     JOptionPane.showMessageDialog(null, "Please fill in All the details");
                 }
@@ -414,33 +362,21 @@ public class Registration extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-        if (lblMain.getText().equals("Login"))
-        {
-            if (comboType.getSelectedItem().toString().equals("Student")) 
-            {
-                if (txtUser.getText().length() == 0 || txtPassword.getText().length() == 0) 
-                {
+        if (lblMain.getText().equals("Login")) {
+            if (comboType.getSelectedItem().toString().equals("Student")) {
+                if (txtUser.getText().length() == 0 || txtPassword.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Please fill Both the details");
-                } else
-                {
+                } else {
                     LoginCall(txtUser.getText(), txtPassword.getText());
-                    //txtUser.setText(null);
-                    //txtPassword.setText(null);
-                    //comboType.setSelectedItem(null);
+
                 }
-            }
-            else if (comboType.getSelectedItem().toString().equals("Teacher")) 
-            {
-                
-                if (txtUser.getText().length() == 0 || txtPassword.getText().length() == 0) 
-                {
+            } else if (comboType.getSelectedItem().toString().equals("Teacher")) {
+
+                if (txtUser.getText().length() == 0 || txtPassword.getText().length() == 0) {
                     JOptionPane.showMessageDialog(null, "Please fill Both the details");
-                } else
-                {
+                } else {
                     LoginCallTeacher(txtUser.getText(), txtPassword.getText());
-                    //txtUser.setText(null);
-                    //txtPassword.setText(null);
-                    //comboType.setSelectedItem(null);
+
                 }
             }
         }
@@ -462,15 +398,12 @@ public class Registration extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void comboTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboTypeActionPerformed
-       if(comboType.getSelectedItem().toString().equals("Student"))
-       {
-           getLastUniqueIDStudent();
-       }
-       else
-       {
-           getLastUniqueIDTeacher();
-       }
-       
+        if (comboType.getSelectedItem().toString().equals("Student")) {
+            getLastUniqueIDStudent();
+        } else {
+            getLastUniqueIDTeacher();
+        }
+
     }//GEN-LAST:event_comboTypeActionPerformed
 
     /**
@@ -551,7 +484,6 @@ public class Registration extends javax.swing.JFrame {
                 }
 
         }*/
-
     void LoginCall(String textUser, String txtPassword) {
         boolean flag = false;
         try {
@@ -565,6 +497,7 @@ public class Registration extends javax.swing.JFrame {
             }
             if (flag) {
                 JOptionPane.showMessageDialog(null, "Sucessfully Logged in!");
+                setVisible(false);
                 CanvasHomePage newHomePage = new CanvasHomePage();
                 newHomePage.setVisible(true);
             } else {
@@ -600,7 +533,8 @@ public class Registration extends javax.swing.JFrame {
         }
 
     }
-     void RegisterCallTeacher(String textUser, String txtPassword, String txtName, String txtEmail, String txtPhone, String uniqueID) {
+
+    void RegisterCallTeacher(String textUser, String txtPassword, String txtName, String txtEmail, String txtPhone, String uniqueID) {
         boolean flag = false;
         try {
             Class.forName("java.sql.Driver");
@@ -624,7 +558,8 @@ public class Registration extends javax.swing.JFrame {
         }
 
     }
-     void LoginCallTeacher(String textUser, String txtPassword) {
+
+    void LoginCallTeacher(String textUser, String txtPassword) {
         boolean flag = false;
         try {
             Class.forName("java.sql.Driver");

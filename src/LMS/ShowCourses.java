@@ -33,13 +33,14 @@ public class ShowCourses extends javax.swing.JFrame {
         dtm.setRowCount(0);
         try
         {
+            //JOptionPane.showMessageDialog(null,AddCourses.txtStudentID.getText());
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
             //ResultSet rs = st.executeQuery("select * from courses where studentID = \""+ Registration.txtUniqueID.getText()+"\"");
-            ResultSet rs = st.executeQuery("select * from courses");
+            ResultSet rs = st.executeQuery("select * from courses where studentID='"+AddCourses.txtStudentID.getText()+"'");
             while(rs.next())
             {
-                dtm.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)});
+                dtm.addRow(new Object[]{rs.getString(5),rs.getString(2),rs.getString(3),rs.getString(4)});
             }
         }
         catch (Exception e)

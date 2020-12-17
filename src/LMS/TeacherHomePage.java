@@ -36,9 +36,9 @@ public class TeacherHomePage extends javax.swing.JFrame {
         btnCourses = new javax.swing.JButton();
         btnGrades = new javax.swing.JButton();
         btnMessage = new javax.swing.JButton();
-        btnViewStudents = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
         btnSignOut = new javax.swing.JButton();
-        btnaddStudents = new javax.swing.JButton();
+        btnAddCourses = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -54,7 +54,7 @@ public class TeacherHomePage extends javax.swing.JFrame {
         lblCanvas.setBackground(new java.awt.Color(153, 153, 255));
         lblCanvas.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         lblCanvas.setText("Teacher's Page");
-        jPanel1.add(lblCanvas, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 34, -1, -1));
+        jPanel1.add(lblCanvas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 30, -1, 40));
 
         btnprofile.setBackground(new java.awt.Color(153, 153, 255));
         btnprofile.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -68,7 +68,7 @@ public class TeacherHomePage extends javax.swing.JFrame {
 
         btnCourses.setBackground(new java.awt.Color(153, 153, 255));
         btnCourses.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnCourses.setText("Add Courses");
+        btnCourses.setText("Courses");
         btnCourses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCoursesActionPerformed(evt);
@@ -78,7 +78,7 @@ public class TeacherHomePage extends javax.swing.JFrame {
 
         btnGrades.setBackground(new java.awt.Color(153, 153, 255));
         btnGrades.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnGrades.setText("Add Grades");
+        btnGrades.setText("Grades");
         btnGrades.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGradesActionPerformed(evt);
@@ -88,7 +88,7 @@ public class TeacherHomePage extends javax.swing.JFrame {
 
         btnMessage.setBackground(new java.awt.Color(153, 153, 255));
         btnMessage.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnMessage.setText("All Courses");
+        btnMessage.setText("Calander");
         btnMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMessageActionPerformed(evt);
@@ -96,15 +96,15 @@ public class TeacherHomePage extends javax.swing.JFrame {
         });
         jPanel1.add(btnMessage, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 520, 210, 70));
 
-        btnViewStudents.setBackground(new java.awt.Color(153, 153, 255));
-        btnViewStudents.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnViewStudents.setText("View all Students");
-        btnViewStudents.addActionListener(new java.awt.event.ActionListener() {
+        jButton5.setBackground(new java.awt.Color(153, 153, 255));
+        jButton5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButton5.setText("Message");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewStudentsActionPerformed(evt);
+                jButton5ActionPerformed(evt);
             }
         });
-        jPanel1.add(btnViewStudents, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 210, 60));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 430, 210, 60));
 
         btnSignOut.setBackground(new java.awt.Color(153, 153, 255));
         btnSignOut.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -117,15 +117,15 @@ public class TeacherHomePage extends javax.swing.JFrame {
         });
         jPanel1.add(btnSignOut, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 610, 210, -1));
 
-        btnaddStudents.setBackground(new java.awt.Color(153, 153, 255));
-        btnaddStudents.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btnaddStudents.setText("Add Students");
-        btnaddStudents.addActionListener(new java.awt.event.ActionListener() {
+        btnAddCourses.setBackground(new java.awt.Color(153, 153, 255));
+        btnAddCourses.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnAddCourses.setText("Add Courses");
+        btnAddCourses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnaddStudentsActionPerformed(evt);
+                btnAddCoursesActionPerformed(evt);
             }
         });
-        jPanel1.add(btnaddStudents, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, 210, 60));
+        jPanel1.add(btnAddCourses, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, 210, 60));
 
         btnExit.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/projectImages/Close.png"))); // NOI18N
@@ -155,46 +155,46 @@ public class TeacherHomePage extends javax.swing.JFrame {
 
     private void btnprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnprofileActionPerformed
         // TODO add your handling code here:
-        
+
         new ProfilePageTeacher().setVisible(true);
     }//GEN-LAST:event_btnprofileActionPerformed
 
     private void btnSignOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignOutActionPerformed
-        int a = JOptionPane.showConfirmDialog(null,"Do you really want to Log Out","Select",JOptionPane.YES_NO_OPTION);
-        if(a ==0)
-        {
+        int a = JOptionPane.showConfirmDialog(null, "Do you really want to Log Out", "Select", JOptionPane.YES_NO_OPTION);
+        if (a == 0) {
             setVisible(false);
             new Registration().setVisible(true);
         }
     }//GEN-LAST:event_btnSignOutActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
-        int a = JOptionPane.showConfirmDialog(null,"Do you really want to Exit","Select",JOptionPane.YES_NO_OPTION);
-        if(a ==0)
-        {
+        int a = JOptionPane.showConfirmDialog(null, "Do you really want to Exit", "Select", JOptionPane.YES_NO_OPTION);
+        if (a == 0) {
             System.exit(0);
         }
     }//GEN-LAST:event_btnExitActionPerformed
 
-    private void btnaddStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaddStudentsActionPerformed
-        //new newStudentPage().setVisible(true);
-    }//GEN-LAST:event_btnaddStudentsActionPerformed
-
-    private void btnViewStudentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewStudentsActionPerformed
-        new PrintStudentList().setVisible(true);
-    }//GEN-LAST:event_btnViewStudentsActionPerformed
+    private void btnAddCoursesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddCoursesActionPerformed
+        new AddCoursesTeacher().setVisible(true);
+    }//GEN-LAST:event_btnAddCoursesActionPerformed
 
     private void btnCoursesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCoursesActionPerformed
-       new AddCoursesTeacher().setVisible(true);
+       new AutoGeneratedCourseButtonTeacher();
     }//GEN-LAST:event_btnCoursesActionPerformed
 
     private void btnGradesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGradesActionPerformed
+        
         new AddGradesPage().setVisible(true);
     }//GEN-LAST:event_btnGradesActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        new EmailSendingApplication().setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
     private void btnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMessageActionPerformed
-       // new AutoGeneratedCourseButtonTeacher().setVisible(true);
-        new AutoGeneratedCourseButtonTeacher();
+        // TODO add your handling code here:
+        new CalanderPage().setVisible(true);
     }//GEN-LAST:event_btnMessageActionPerformed
 
     /**
@@ -224,6 +224,20 @@ public class TeacherHomePage extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -234,14 +248,14 @@ public class TeacherHomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddCourses;
     private javax.swing.JButton btnCourses;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnGrades;
     private javax.swing.JButton btnMessage;
     private javax.swing.JButton btnSignOut;
-    private javax.swing.JButton btnViewStudents;
-    private javax.swing.JButton btnaddStudents;
     private javax.swing.JButton btnprofile;
+    private javax.swing.JButton jButton5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCanvas;
     private javax.swing.JLabel lblWelcome;

@@ -16,39 +16,46 @@ import javax.swing.JOptionPane;
  */
 public class addAssignmentQuestion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form addAssignmentQuestion
-     */
+    private  String courseID;
+    private  String teacherID;
     public addAssignmentQuestion() {
         initComponents();
+        lblAssignmentName.setText(AssignmentPageTeacher.lblAssignmentName.getText());
     }
     public void addQuestions()
     {
          try
         {
+            courseID=IndividualCoursePageTeacher.lblCourseID.getText();
+            teacherID=IndividualCoursePageTeacher.lblInstructorID.getText();
             Connection con = ConnectionProvider.getCon();
-            String courseID=ContentPageTeacherCourse.lblCourseID.getText();
-            String teacherID=ContentPageTeacherCourse.lblTeacherID.getText();
-
+            
+            JOptionPane.showMessageDialog(null,courseID+ ""+teacherID);
             String question=txtQuestion.getText();
             String option1=txtOption1.getText();
             String option2=txtOption2.getText();
             String option3=txtOption3.getText();
             String option4=txtOption4.getText();
             String answer=txtAnswer.getText();
+            String questionNum=lblQuestionNum.getText();
+            String assignmentName=lblAssignmentName.getText();
+            String totalQuestions=AssignmentPageTeacher.lblQuestionNum.getText();
             
             //String classroom=txtInstName.getText();
             
-            PreparedStatement ps = con.prepareStatement("insert into assignment1 (courseID,teacherID,question,option1,option2,option3,option4,answer)values(?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("insert into assignment (questionNum,courseID,teacherID,question,option1,option2,option3,option4,answer,assignmentName,totalQuestions)values(?,?,?,?,?,?,?,?,?,?,?)");
             //ps.setString(1,teacherName);
-            ps.setString(1,courseID);
-            ps.setString(2,teacherID);
-            ps.setString(3,question);
-            ps.setString(4,option1);
-            ps.setString(5,option2);
-            ps.setString(6,option3);
-            ps.setString(7,option4);
-            ps.setString(8,answer);
+            ps.setString(1,questionNum);
+            ps.setString(2,courseID);
+            ps.setString(4,question);
+            ps.setString(5,option1);
+            ps.setString(6,option2);
+            ps.setString(7,option3);
+            ps.setString(8,option4);
+            ps.setString(9,answer);
+            ps.setString(3,teacherID);
+            ps.setString(10,assignmentName);
+            ps.setString(11,totalQuestions);
             //ps.setString(5,classroom);
             ps.executeUpdate();
             JOptionPane.showMessageDialog(null,"Sucessfully updated");
@@ -79,7 +86,7 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        lblQuestionNum = new javax.swing.JTextField();
         txtAnswer = new javax.swing.JTextField();
         txtOption3 = new javax.swing.JTextField();
         txtOption2 = new javax.swing.JTextField();
@@ -88,11 +95,14 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
         txtOption4 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        lblAssignmentName = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(1360, 750));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -145,8 +155,8 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
         });
         getContentPane().add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 550, -1, 40));
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(202, 75, 65, -1));
+        lblQuestionNum.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        getContentPane().add(lblQuestionNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(202, 75, 65, -1));
 
         txtAnswer.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         getContentPane().add(txtAnswer, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 440, 1020, 35));
@@ -190,8 +200,21 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
         });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1230, 0, -1, -1));
 
-        jPanel1.setBackground(new java.awt.Color(255, 204, 204));
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1360, 750));
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel9.setText("AssignmentName:");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 70, -1, -1));
+
+        lblAssignmentName.setEditable(false);
+        lblAssignmentName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblAssignmentName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lblAssignmentNameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(lblAssignmentName, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 70, 190, -1));
+
+        jPanel2.setBackground(new java.awt.Color(255, 204, 204));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1360, 750));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -201,7 +224,16 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
     }//GEN-LAST:event_txtOption1ActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        
         addQuestions();
+        txtQuestion.setText("");
+        txtOption1.setText("");
+        txtOption2.setText("");
+        txtOption3.setText("");
+        txtOption4.setText("");
+        txtAnswer.setText("");
+        lblQuestionNum.setText("");
+        
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -221,8 +253,12 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         setVisible(false);
-       new ViewAssignment1().setVisible(true);
+       new ViewAssignments().setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void lblAssignmentNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblAssignmentNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblAssignmentNameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -272,8 +308,10 @@ public class addAssignmentQuestion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JTextField lblAssignmentName;
+    private javax.swing.JTextField lblQuestionNum;
     private javax.swing.JTextField txtAnswer;
     private javax.swing.JTextField txtOption1;
     private javax.swing.JTextField txtOption2;

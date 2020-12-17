@@ -7,6 +7,7 @@ package LMS;
 
 import Project1.ConnectionProvider;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
@@ -22,10 +23,13 @@ public class FinalGrades extends javax.swing.JFrame {
      * Creates new form FinalGrades
      */
     private String uniqueID="";
+    private String teacherID=IndividualCoursePageStudent.teacherID;
+    private String courseID=IndividualCoursePageStudent.courseID;
     public FinalGrades() {
         initComponents();
         getDetails();
         accessGrades();
+        //addAllGrades();
     }
     public void accessGrades()
     {
@@ -35,15 +39,15 @@ public class FinalGrades extends javax.swing.JFrame {
         {
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("select * from grades where studentID=\""+uniqueID +"\"");
+            ResultSet rs = st.executeQuery("select studentID, courseID,percentage, grade from grades where studentID=\""+uniqueID +"\"");
             while(rs.next())
             {
-                dtm.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(3)});
+                dtm.addRow(new Object[]{rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4)});
             }
         }
         catch (Exception e)
         {
-            JOptionPane.showMessageDialog(null,e);
+            JOptionPane.showMessageDialog(null,"Here"+e);
         }
     }
     public void getDetails()
@@ -57,19 +61,84 @@ public class FinalGrades extends javax.swing.JFrame {
            // String qrry = "select * from logindetails where username=\"" + Registration.textUser + "\"and password=\"" + Registration.txtPassword + "\"";
            ResultSet rs;
            rs = st.executeQuery("select *from student1 where username=\"" + Registration.txtUser.getText() + "\" and password1=\"" + Registration.txtPassword.getText() +"\"");
-            // ResultSet rs = st.executeQuery("select *from logindetails");
             while(rs.next())
             {
                 name+=rs.getString(3);
                 uniqueID+=rs.getString(6);
             }
-             JOptionPane.showMessageDialog(null, uniqueID);
+             
             txtName.setText(name);
             txtStudentID.setText(uniqueID);
         }
         catch(Exception ex)
         {
+            JOptionPane.showMessageDialog(null, "H"+ex);
+        }
+    }
+  /*  public void addAllGrades()
+    {
+        try
+        {
+            double percentage=0;
+            Connection con = ConnectionProvider.getCon();
+            Statement st = con.createStatement();
+           ResultSet rs;
+           rs = st.executeQuery("select percentage from grades1 where studentID=\"" + uniqueID + "\" and teacherID=\"" + teacherID + "\" and courseID=\"" + courseID +"\"");
+            int count=0;
+            while(rs.next())
+            {
+                percentage+=Double.valueOf(rs.getString(1));
+                
+                count=count+1;
+            }
+            double totalPercent=percentage/count;
+            convertGrades(totalPercent);
+        }
+        catch(Exception ex)
+        {
             JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+   /* public void convertGrades(double per)
+    {
+        String letterGrade;
+        if(per>=90 && per <=100)
+        {
+            letterGrade="A";
+        }
+        else if(per>=80 && per<90)
+        {
+            letterGrade="B";
+        }
+        else if(per>=70 && per <80)
+        {
+            letterGrade="C";
+        }
+        else if(per>=60 && per <70)
+        {
+            letterGrade="D";
+        }
+        else
+            letterGrade="F";
+        
+        try
+        {
+            Connection con = ConnectionProvider.getCon();
+            JOptionPane.showMessageDialog(null,letterGrade );
+             PreparedStatement ps=con.prepareStatement("insert into grades values(?,?,?,?,?)");
+             JOptionPane.showMessageDialog(null,String.valueOf(per) );
+             ps.setString(1,uniqueID);
+             ps.setString(2,courseID);
+             ps.setString(3,teacherID);
+             ps.setString(4,String.valueOf(per));
+             ps.setString(5,letterGrade);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null,"Sucessfully Updated the marks to grades table");
+              
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,e);
         }
     }
 
@@ -116,7 +185,7 @@ public class FinalGrades extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Student ID", "Course ID", "Grades"
+                "Student ID", "Course ID", "percentage", "Grades"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -134,33 +203,29 @@ public class FinalGrades extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtName)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel1)
-                                .addGap(0, 0, 0))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(txtName)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(180, 180, 180)
-                                .addComponent(jButton1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(9, 9, 9)))))
+                        .addGap(180, 180, 180)
+                        .addComponent(jButton1))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtStudentID, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(9, 9, 9)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

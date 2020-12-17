@@ -17,6 +17,8 @@ public class ProfilePage extends javax.swing.JFrame {
     /**
      * Creates new form ProfilePage
      */
+    public static String studentID="";
+    public static String name="";
     public ProfilePage() 
     {
         initComponents();
@@ -29,19 +31,21 @@ public class ProfilePage extends javax.swing.JFrame {
         {
             Class.forName("java.sql.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/learningmanagementsystem","root","toor");
-            Statement stmnt = conn.createStatement();
-            String qrry = "update student1 set userName='fieldName.getText()', password1='fieldPassword.getText()',studentName='fieldName.getText()',"
-                    + "email='fieldEmail.getText()',phone='fieldPhone.getText()',studentID='fieldUniqueID.getText()'";
-                            /*+"'" + fieldName.getText() + "',"
-                            + "'" + fieldPassword.getText() + "',"
-                            + "'" + fieldName.getText() + "',"
-                            + "'" + fieldEmail.getText() + "',"
-                            + "'" + fieldPhone.getText() + "',"
-                            + "'" + fieldUniqueID.getText()+ "'"
-                            +");";*/
-
-            stmnt.executeUpdate(qrry);
-            stmnt.close();
+            //Statement stmnt = conn.createStatement();
+           // String qrry = "update student1 set userName='fieldName.getText()', password1='fieldPassword.getText()',studentName='fieldName.getText()',"
+            //        + "email='fieldEmail.getText()',phone='fieldPhone.getText()',studentID='fieldUniqueID.getText()'";
+            
+            String qrry= "update student1 set userName=?, password1=?, studentName=?, email=?, phone=?where userName=? and password1=?";
+            PreparedStatement pst= conn.prepareStatement(qrry);
+            pst.setString(1,fieldUserName.getText());
+            pst.setString(2,fieldPassword.getText());
+            pst.setString(3,fieldName.getText());
+            pst.setString(4,fieldEmail.getText());
+            pst.setString(5,fieldPhone.getText());
+            pst.setString(6,fieldUserName.getText());
+            pst.setString(7,fieldPassword.getText());
+            pst.executeUpdate();
+            pst.close();
             conn.close();
             JOptionPane.showMessageDialog(null, "Great, You have sucessfully updated yopur information!");
         }
@@ -54,12 +58,12 @@ public class ProfilePage extends javax.swing.JFrame {
     {
         try
         {
-            String name="";
+            //String name="";
             String email="";
             String phoneNumber="";
             String userName="";
             String password ="";
-            String uniqueID="";
+            //String uniqueID="";
             Connection con = ConnectionProvider.getCon();
             Statement st = con.createStatement();
            // String qrry = "select * from logindetails where username=\"" + Registration.textUser + "\"and password=\"" + Registration.txtPassword + "\"";
@@ -68,19 +72,19 @@ public class ProfilePage extends javax.swing.JFrame {
             // ResultSet rs = st.executeQuery("select *from logindetails");
             while(rs.next())
             {
-                userName+=rs.getString(1);
-                password+=rs.getString(2);
-                name+=rs.getString(3);
-                email+=rs.getString(4);
-                phoneNumber+=rs.getString(5);
-                uniqueID+=rs.getString(6);
+                userName=rs.getString(1);
+                password=rs.getString(2);
+                name=rs.getString(3);
+                email=rs.getString(4);
+                phoneNumber=rs.getString(5);
+                studentID=rs.getString(6);
             }
             fieldName.setText(name);
             fieldEmail.setText(email);
             fieldPhone.setText(phoneNumber);
             fieldUserName.setText(userName);
             fieldPassword.setText(password);
-            fieldUniqueID.setText(uniqueID);
+            fieldUniqueID.setText(studentID);
         }
         catch(Exception ex)
         {
@@ -228,6 +232,7 @@ public class ProfilePage extends javax.swing.JFrame {
         lblUniqueID.setText("Unique ID:");
         jPanel1.add(lblUniqueID, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, -1, -1));
 
+        fieldUniqueID.setEditable(false);
         fieldUniqueID.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         fieldUniqueID.setText("ID here");
         jPanel1.add(fieldUniqueID, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 50, 160, -1));
